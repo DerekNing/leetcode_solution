@@ -1,0 +1,34 @@
+141. Linked List Cycle
+Difficulty:     Easy
+
+Given a linked list, determine if it has a cycle in it.
+
+Follow up:
+Can you solve it without using extra space?
+
+用两个指针去跑，一个跑的快，一个跑的慢，跑完前如果能相遇就肯定有循环。
+（当然也能存储一个set来比较就是要额外空间）
+
+链表问题常用工具就是双指针，尤其不同速度前进的双指针；然后要注意的就是遍历while循环条件以及跳出循环的时候指针位置/状态
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def hasCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        if not head: return False
+        fast = head
+        slow = head
+        #注意是用fast and fast.next作为条件
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if fast == slow: return True
+        return False

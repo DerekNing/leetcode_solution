@@ -1,0 +1,61 @@
+92. Reverse Linked List II
+Difficulty:     Medium
+
+Reverse a linked list from position m to n. Do it in-place and in one-pass.
+
+For example:
+Given 1->2->3->4->5->NULL, m = 2 and n = 4,
+return 1->4->3->2->5->NULL.
+
+Note:
+Given m, n satisfy the following condition:
+1 ≤ m ≤ n ≤ length of list.
+
+先把算法搞清楚：
+0）加入dummy节点解决各种corner case问题，充分利用dummy（把current初始值设置为dummy）
+1）找到位置m，记录m-1节点和m节点
+2）向前遍历链表，逆转这部分链表的顺序，注意需要记录newHead和newTail，而newTail其实就是位置m的那个节点
+3）到达位置n+1，把得到的中间那条逆转链表和位置m-1/n+1连起来
+4）返回dummy.next
+
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def reverseBetween(self, head, m, n):
+        """
+        :type head: ListNode
+        :type m: int
+        :type n: int
+        :rtype: ListNode
+        """
+        if not head: return None
+
+        dummy = ListNode(0)
+        dummy.next = head
+        current = dummy
+
+        #find the position m-1 and m
+        for _ in xrange(m-1):
+            current = current.next
+        m_prev = current
+        current = current.next
+        newTail = current # which will be the newTail of sub reversed linked list
+
+        #reverse list from m to n
+        newHead = None
+        #注意是经过n-m+1次循环，最后的current值为n+1
+        for _ in xrange(n-m+1):
+            after = current.next
+            current.next = newHead
+            newHead = current
+            current = after
+
+        #connect the newHead and newTail which is m to the old linked list
+        m_prev.next = newHead
+        newTail.next = current
+        return dummy.next
