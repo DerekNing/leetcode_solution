@@ -1,0 +1,52 @@
+栈的典型应用，遍历字符串，开符号就压栈，闭符号就从栈中弹出元素（之前检测栈是否为空，为空返回False），然后检测二者是否
+匹配，不匹配直接返回False；最后不要忘记检测栈是否为空，不为空也是返回False
+另外在检测匹配的时候没有用函数，而是出于方便直接用了一个字典结构来做匹配（开符号做key，闭符号做value）
+
+
+代码如下：
+class Solution(object):
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        openParen = ['(', '{', '[']
+        closeParen = [')', '}', ']']
+        match_d = {'(': ')', '{':'}', '[':']'}
+        openStack = []
+        result = True
+        for c in s:
+            if c in openParen:
+                openStack.append(c)
+            if c in closeParen:
+                if not openStack:
+                    return False
+                else:
+                    if(match_d[openStack.pop()] != c):
+                        return False
+        if openStack:
+            return False
+        else:
+            return True
+
+其实可以优化下，更节省空间，包括if结构变得更加清晰，第二版本代码：
+class Solution(object):
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+
+        match_d = {'(': ')', '{':'}', '[':']'}
+        openStack = []
+        result = True
+        for c in s:
+            if c in match_d:
+                openStack.append(c)
+            if c in match_d.values():
+                if (not openStack) or (match_d[openStack.pop()] != c):
+                    return False
+        if openStack:
+            return False
+        else:
+            return True
